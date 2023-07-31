@@ -15,3 +15,9 @@ pub fn set_val(conn: &mut Connection, key: String, val: String) -> RedisResult<(
 
     Ok(())
 }
+
+pub fn get_val(conn: &mut Connection, key: String) -> RedisResult<(String)> {
+    let val: String = conn.get(key)?;
+
+    Ok(val)
+}
