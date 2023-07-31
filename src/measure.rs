@@ -9,7 +9,7 @@ use crate::cfg::ReadSiteList;
 use crate::storage::new_conn;
 use crate::storage::set_val;
 
-pub async fn refresh(host: String, delay: u64) {
+pub async fn refresh(host: String, timeout: u64, delay: u64) {
     let mut v_main: Vec<SiteTime> = ReadSiteList();
 
     let n_sites = v_main.len();
@@ -20,7 +20,7 @@ pub async fn refresh(host: String, delay: u64) {
         let mut handles = vec![];
         for k in 0..n_sites {
             let site = v_main[k].site.clone();
-            let handle = tokio::spawn(measure(k, site));
+            let handle = tokio::spawn(measure(k, timeout, site));
             handles.push(handle);
         }
     
@@ -39,14 +39,14 @@ pub async fn refresh(host: String, delay: u64) {
     }
 }
 
-async fn measure(n: usize, site: String) -> Result<SiteRes> {
+async fn measure(n: usize, timeout: u64, site: String) -> Result<SiteRes> {
     let uri = ("http://".to_string() + &site).parse().unwrap();
     let client = Client::new();
     let start = Instant::now();
     let work = client.get(uri);
     let mut elapsed_time: Duration = Duration::from_millis(0);
 
-    match tokio::time::timeout(Duration::from_secs(10), work).await {
+    match tokio::time::timeout(Duration::from_secs(timeout), work).await {
         Ok(res) => match res {
             Ok(_) => {
                 elapsed_time = start.elapsed();

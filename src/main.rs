@@ -23,9 +23,10 @@ async fn main() {
     let parsed: Cfg = cfg.try_deserialize().unwrap();
 
     let host = parsed.RedisCfg.host.clone();
+    let timeout = parsed.Timeout;
     let delay = parsed.RefreshTimeout;
 
-    let refr_handle = tokio::spawn(refresh(host, delay));
+    let refr_handle = tokio::spawn(refresh(host, timeout, delay));
 
     refr_handle.await.unwrap();
 }

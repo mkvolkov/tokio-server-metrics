@@ -10,7 +10,7 @@ pub struct SiteTime {
 #[derive(Debug, Deserialize)]
 pub struct Cfg {
     pub RedisCfg: CfgRedis,
-    Timeout: i32,
+    pub Timeout: u64,
     pub RefreshTimeout: u64,
     RefreshStats: i32,
     FlushTime: i32,
