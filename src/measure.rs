@@ -1,6 +1,7 @@
 use hyper::Client;
 use std::time::{Duration, Instant};
 use tokio::io::Result;
+use tokio::time::sleep;
 
 use crate::SiteRes;
 use crate::cfg::SiteTime;
@@ -8,7 +9,7 @@ use crate::cfg::ReadSiteList;
 use crate::storage::new_conn;
 use crate::storage::set_val;
 
-pub async fn refresh(host: String) {
+pub async fn refresh(host: String, delay: u64) {
     let mut v_main: Vec<SiteTime> = ReadSiteList();
 
     let n_sites = v_main.len();
@@ -33,6 +34,8 @@ pub async fn refresh(host: String) {
         for k in 0..v_main.len() {
             set_val(& mut r_conn, v_main[k].site.clone(), v_main[k].time.clone()).unwrap();
         }
+
+        sleep(Duration::from_secs(delay)).await;
     }
 }
 

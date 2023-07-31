@@ -9,9 +9,9 @@ pub struct SiteTime {
 
 #[derive(Debug, Deserialize)]
 pub struct Cfg {
-    RedisCfg: CfgRedis,
+    pub RedisCfg: CfgRedis,
     Timeout: i32,
-    RefreshTimeout: i32,
+    pub RefreshTimeout: u64,
     RefreshStats: i32,
     FlushTime: i32,
     ServerCfg: Server,
@@ -44,10 +44,4 @@ pub fn ReadSiteList() -> Vec<SiteTime> {
     }
 
     v
-}
-
-impl Cfg {
-    pub fn r_host(self) -> String {
-        self.RedisCfg.host.clone()
-    }
 }
