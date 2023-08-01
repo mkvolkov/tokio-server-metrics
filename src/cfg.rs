@@ -1,5 +1,4 @@
 use serde::Deserialize;
-use std::io;
 use std::fs::read_to_string;
 
 pub struct SiteTime {

@@ -12,6 +12,7 @@ mod measure;
 use measure::refresh;
 
 mod storage;
+mod metrics;
 
 struct SiteRes {
     index: usize,
