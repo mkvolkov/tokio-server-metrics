@@ -21,20 +21,20 @@ struct SiteRes {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-    let cfg = Config::builder()
+    let raw_cfg = Config::builder()
         .add_source(File::with_name("cfg.yml"))
         .build()
         .unwrap();
 
-    let parsed: Cfg = cfg.try_deserialize().unwrap();
+    let cfg: Cfg = raw_cfg.try_deserialize().unwrap();
 
-    let host = parsed.RedisCfg.host.clone();
-    let timeout = parsed.Timeout;
-    let delay = parsed.RefreshTimeout;
+    let host = cfg.redis_host.to_string();
+    let timeout = cfg.timeout;
+    let delay = cfg.refresh_timeout;
 
     let refr_handle = tokio::spawn(refresh(host, timeout, delay));
 
-    let addr = ([127,0,0,1], 8081).into();
+    let addr = ([127,0,0,1], cfg.server_port).into();
 
     let service = make_service_fn(|_| async { Ok::<_, hyper::Error>(service_fn(response))});
 

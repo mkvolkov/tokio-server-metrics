@@ -8,31 +8,13 @@ pub struct SiteTime {
 
 #[derive(Debug, Deserialize)]
 pub struct Cfg {
-    pub RedisCfg: CfgRedis,
-    pub Timeout: u64,
-    pub RefreshTimeout: u64,
-    RefreshStats: i32,
-    FlushTime: i32,
-    ServerCfg: Server,
+    pub redis_host: String,
+    pub timeout: u64,
+    pub refresh_timeout: u64,
+    pub server_port: u16,
 }
 
-#[derive(Debug, Deserialize)]
-pub struct CfgRedis {
-    pub host: String,
-    pub port: String,
-    pub password: String,
-    maxidle: i32,
-    maxconn: i32,
-    sectime: i32,
-}
-
-#[derive(Debug, Deserialize)]
-pub struct Server {
-    host: String,
-    port: String,
-}
-
-pub fn ReadSiteList() -> Vec<SiteTime> {
+pub fn read_site_list() -> Vec<SiteTime> {
     let mut v = Vec::new();
 
     for line in read_to_string("sitelist.txt").unwrap().lines() {

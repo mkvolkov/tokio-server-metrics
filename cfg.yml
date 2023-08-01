@@ -1,19 +1,7 @@
-RedisCfg:
-  host: '127.0.0.1'
-  port: '6379'
-  password: 'redis1'
-  maxidle: 100
-  maxconn: 1000
-  sectime: 4
+redis_host: "127.0.0.1"
 
-Timeout: 10
+server_port: 8081
 
-RefreshTimeout: 60
+timeout: 10
 
-RefreshStats: 30
-
-FlushTime: 2
-
-ServerCfg:
-  host: '127.0.0.1'
-  port: 8081
+refresh_timeout: 60

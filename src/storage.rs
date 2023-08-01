@@ -5,7 +5,7 @@ pub fn new_conn(host: String) -> RedisResult<Connection> {
     let addr: String = format!("redis://{}/", host);
     let client = Client::open(addr)?;
 
-    let mut conn = client.get_connection()?;
+    let conn = client.get_connection()?;
 
     RedisResult::Ok(conn)
 }
@@ -16,7 +16,7 @@ pub fn set_val(conn: &mut Connection, key: String, val: String) -> RedisResult<(
     Ok(())
 }
 
-pub fn get_val(conn: &mut Connection, key: String) -> RedisResult<(String)> {
+pub fn get_val(conn: &mut Connection, key: String) -> RedisResult<String> {
     let val: String = conn.get(key)?;
 
     Ok(val)

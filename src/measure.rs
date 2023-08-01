@@ -5,14 +5,14 @@ use tokio::time::sleep;
 
 use crate::SiteRes;
 use crate::cfg::SiteTime;
-use crate::cfg::ReadSiteList;
+use crate::cfg::read_site_list;
 use crate::storage::new_conn;
 use crate::storage::set_val;
 
 const THOUS: u64 = 1000;
 
 pub async fn refresh(host: String, timeout: u64, delay: u64) {
-    let mut v_main: Vec<SiteTime> = ReadSiteList();
+    let mut v_main: Vec<SiteTime> = read_site_list();
 
     let n_sites = v_main.len();
 
