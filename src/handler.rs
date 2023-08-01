@@ -1,4 +1,4 @@
-use hyper::{Body, Method, Request, Response, Server, StatusCode};
+use hyper::{Body, Method, Request, Response, StatusCode};
 use redis::Client;
 use crate::storage::get_val;
 
@@ -12,6 +12,28 @@ pub async fn response(req: Request<Body>) -> Result<Response<Body>, hyper::Error
             let mut m_conn = client.get_connection().unwrap();
 
             let res = get_val(&mut m_conn, str_key).unwrap();
+
+            let body = format!("{}", res);
+
+            Ok(Response::new(body.into()))
+        }
+
+        (&Method::GET, "/fastest") => {
+            let client = Client::open("redis://127.0.0.1/").unwrap();
+            let mut m_conn = client.get_connection().unwrap();
+
+            let res = get_val(&mut m_conn, "fastest".to_string()).unwrap();
+
+            let body = format!("{}", res);
+
+            Ok(Response::new(body.into()))
+        }
+
+        (&Method::GET, "/slowest") => {
+            let client = Client::open("redis://127.0.0.1/").unwrap();
+            let mut m_conn = client.get_connection().unwrap();
+
+            let res = get_val(&mut m_conn, "slowest".to_string()).unwrap();
 
             let body = format!("{}", res);
 

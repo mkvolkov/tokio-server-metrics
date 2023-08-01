@@ -9,6 +9,8 @@ use crate::cfg::ReadSiteList;
 use crate::storage::new_conn;
 use crate::storage::set_val;
 
+const THOUS: u64 = 1000;
+
 pub async fn refresh(host: String, timeout: u64, delay: u64) {
     let mut v_main: Vec<SiteTime> = ReadSiteList();
 
@@ -17,6 +19,8 @@ pub async fn refresh(host: String, timeout: u64, delay: u64) {
     let mut r_conn = new_conn(host).unwrap();
 
     loop {
+        
+
         let mut handles = vec![];
         for k in 0..n_sites {
             let site = v_main[k].site.clone();
@@ -31,9 +35,35 @@ pub async fn refresh(host: String, timeout: u64, delay: u64) {
             }
         }
 
+        let mut fastest: u64 = timeout * THOUS;
+        let mut f_site: String = "unknown".to_string();
+        let mut slowest: u64 = 1;
+        let mut s_site: String = "unknown".to_string();
+        for k in 0..v_main.len() {
+            let stime = v_main[k].time.parse::<u64>();
+            match stime {
+                Ok(st) => {
+                    if st < fastest {
+                        fastest = st;
+                        f_site = v_main[k].site.clone();
+                    }
+                    if st > slowest {
+                        slowest = st;
+                        s_site = v_main[k].site.clone();
+                    }
+                }
+                Err(_) => {
+                    continue;
+                }
+            }
+        }
+
         for k in 0..v_main.len() {
             set_val(& mut r_conn, v_main[k].site.clone(), v_main[k].time.clone()).unwrap();
         }
+
+        set_val(& mut r_conn, "fastest".to_string(), f_site).unwrap();
+        set_val(& mut r_conn, "slowest".to_string(), s_site).unwrap();
 
         sleep(Duration::from_secs(delay)).await;
     }
