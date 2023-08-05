@@ -32,7 +32,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     let timeout = cfg.timeout;
     let delay = cfg.refresh_timeout;
 
-    let refr_handle = tokio::spawn(refresh(host, timeout, delay));
+    tokio::spawn(refresh(host, timeout, delay));
 
     let addr = ([127,0,0,1], cfg.server_port).into();
 
@@ -43,8 +43,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
     print!("Listening on http://{}\n", addr);
 
     server.await?;
-
-    refr_handle.await.unwrap();
 
     Ok(())
 }
