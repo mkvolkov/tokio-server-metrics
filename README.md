@@ -22,4 +22,15 @@ curl http://localhost:8081/slowest
 curl http://localhost:8081/st_site -XGET -d 'google.com'
 
 curl http://localhost:8081/admin/all
+
+curl http://localhost:8081/metrics
 ```
+
+Prometheus configuration:
+
+scrape_configs:
+
+  - job_name: "tokio-server-metrics"
+    scrape_interval: 10s
+    static_configs:
+      - targets: ["localhost:8081"]
