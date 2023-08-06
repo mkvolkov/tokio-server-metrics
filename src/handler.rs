@@ -70,6 +70,21 @@ pub async fn response(req: Request<Body>) -> Result<Response<Body>, hyper::Error
             Ok(response)
         }
 
+        (&Method::GET, "/metrics") => {
+            let encoder = TextEncoder::new();
+
+            let mut buf = vec![];
+            encoder.encode(&prometheus::gather(), &mut buf).unwrap();
+
+            let resp = Response::builder()
+                .status(200)
+                .header(CONTENT_TYPE, encoder.format_type())
+                .body(Body::from(buf))
+                .unwrap();
+
+            Ok(resp)
+        }
+
         _ => {
             let mut not_found = Response::default();
             *not_found.status_mut() = StatusCode::NOT_FOUND;
